@@ -157,6 +157,14 @@ export default function Account() {
           <span aria-current="page" className="bg-raised px-3 py-1.5 text-ink">
             Account
           </span>
+          <span className="flex items-center gap-1.5 px-3 py-1.5 text-ink-faint">
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                me ? "bg-long" : "animate-pulse bg-ink-faint"
+              }`}
+            />
+            {me ? "Active" : "Connecting"}
+          </span>
           <button
             onClick={signOut}
             className="px-3 py-1.5 text-ink-faint uppercase tracking-[0.14em] transition-colors hover:text-short"

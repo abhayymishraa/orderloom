@@ -66,7 +66,7 @@ export default function Trading() {
           <span className="grid h-5 w-5 place-items-center bg-accent text-[11px] font-bold text-[#04121f]">
             E
           </span>
-          <span className="text-[13px] font-semibold tracking-tight">Exness</span>
+          <span className="text-[13px] font-semibold tracking-tight">Orderloom</span>
         </Link>
 
         <nav aria-label="Instrument" className="flex items-center gap-1">

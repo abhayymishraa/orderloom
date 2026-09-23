@@ -1,11 +1,11 @@
-# /etc/caddy/sites/exness.caddy — Caddy obtains and renews the certs itself.
+# /etc/caddy/sites/orderloom.caddy — Caddy obtains and renews the certs itself.
 
-api.exness.abhayymishraa.us {
+api.orderloom.abhayymishraa.com {
 	reverse_proxy 127.0.0.1:5000
 	encode zstd gzip
 }
 
-ws.exness.abhayymishraa.us {
+ws.orderloom.abhayymishraa.com {
 	# Caddy proxies WebSocket upgrades natively — no extra config needed.
 	reverse_proxy 127.0.0.1:8080
 }

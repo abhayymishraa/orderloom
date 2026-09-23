@@ -1,13 +1,13 @@
 [Unit]
-Description=exness websocket fanout
+Description=orderloom websocket fanout
 After=redis-server.service
 Requires=redis-server.service
 
 [Service]
 User=ubuntu
 Group=ubuntu
-WorkingDirectory=/srv/exness/ws
-EnvironmentFile=/etc/exness/exness.env
+WorkingDirectory=/srv/orderloom/ws
+EnvironmentFile=/etc/orderloom/orderloom.env
 Environment=PORT=8080
 ExecStart=/usr/local/bin/bun run index.ts
 
@@ -15,13 +15,13 @@ Restart=always
 RestartSec=3
 
 MemoryMax=512M
-SyslogIdentifier=exness-ws
+SyslogIdentifier=orderloom-ws
 
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/srv/exness/ws
+ReadWritePaths=/srv/orderloom/ws
 
 [Install]
 WantedBy=multi-user.target

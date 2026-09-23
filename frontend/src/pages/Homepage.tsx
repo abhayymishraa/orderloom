@@ -81,7 +81,7 @@ const JOURNEY = [
   },
 ];
 
-export default function ExnessLanding() {
+export default function OrderloomLanding() {
   const reduce = useReducedMotion();
   const pipelineRef = useRef<HTMLDivElement>(null);
   const stage0 = useRef<HTMLImageElement>(null);
@@ -106,7 +106,7 @@ export default function ExnessLanding() {
             <span className="grid h-6 w-6 place-items-center bg-accent text-[13px] font-bold text-[#04121f]">
               E
             </span>
-            <span className="text-[15px] font-semibold tracking-tight">Exness</span>
+            <span className="text-[15px] font-semibold tracking-tight">Orderloom</span>
           </Link>
 
           <nav className="flex items-center gap-1 text-sm">
@@ -257,7 +257,7 @@ export default function ExnessLanding() {
                   {reduce ? (
                     <img
                       src="/img/terminal.webp"
-                      alt="The Exness terminal: order book, live candles and an open BTC long with its liquidation price"
+                      alt="The Orderloom terminal: order book, live candles and an open BTC long with its liquidation price"
                       loading="lazy"
                       className="w-full rounded-[3px]"
                     />
@@ -265,7 +265,7 @@ export default function ExnessLanding() {
                     <Lens zoomFactor={1.9} lensSize={190} lensColor="#158bf9">
                       <img
                         src="/img/terminal.webp"
-                        alt="The Exness terminal: order book, live candles and an open BTC long with its liquidation price"
+                        alt="The Orderloom terminal: order book, live candles and an open BTC long with its liquidation price"
                         loading="lazy"
                         className="w-full rounded-[3px] shadow-[inset_0_1px_0_rgb(255_255_255/0.06)]"
                       />

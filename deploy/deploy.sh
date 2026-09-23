@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy exness to the server. Run from your laptop, from the repo root.
+# Deploy orderloom to the server. Run from your laptop, from the repo root.
 #
 #   HOST=1.2.3.4 KEY=~/Desktop/private.key bash deploy/deploy.sh
 #
@@ -9,7 +9,7 @@ set -euo pipefail
 HOST="${HOST:?set HOST=<server ip>}"
 KEY="${KEY:-$HOME/Desktop/private.key}"
 USER_="${SSH_USER:-ubuntu}"
-PROJECT=exness
+PROJECT=orderloom
 SERVICES=(http_server ws price_poller)
 
 SSH_OPTS=(-i "$KEY" -o StrictHostKeyChecking=accept-new)

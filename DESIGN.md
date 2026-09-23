@@ -1,4 +1,4 @@
-# Exness design system
+# Orderloom design system
 
 One dark theme, one accent, one type pairing. Every surface is a variation on
 the same material language; nothing here is per-page invention.

@@ -7,7 +7,7 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     networks:
-      - exness-network
+      - orderloom-network
     depends_on:
       - backend
       - ws
@@ -20,7 +20,7 @@ services:
     ports:
       - "127.0.0.1:5000:5000"
     networks:
-      - exness-network
+      - orderloom-network
     depends_on:
       db:
         condition: service_healthy
@@ -33,7 +33,7 @@ services:
       context: ./price_poller
       dockerfile: Dockerfile
     networks:
-      - exness-network
+      - orderloom-network
     volumes:
       - ./price_poller:/app
     depends_on:
@@ -50,7 +50,7 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     networks:
-      - exness-network
+      - orderloom-network
     volumes:
       - ./ws:/app
     depends_on:
@@ -71,7 +71,7 @@ services:
       retries: 5
     command: ["redis-server"]
     networks:
-      - exness-network
+      - orderloom-network
     volumes:
       - redis-cache:/data
 
@@ -94,12 +94,12 @@ services:
         ]
       timeout: 5s
     networks:
-      - exness-network
+      - orderloom-network
     volumes:
       - pg-data:/var/lib/postgresql/data
 
 networks:
-  exness-network:
+  orderloom-network:
 
 volumes:
   redis-cache:

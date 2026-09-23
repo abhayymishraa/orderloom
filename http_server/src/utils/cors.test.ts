@@ -4,18 +4,18 @@ import { matchOrigin } from "./cors";
 
 const allowed = [
   "http://localhost:3000",
-  "https://exness.abhayymishraa.us",
+  "https://orderloom.abhayymishraa.com",
   "https://*.vercel.app",
 ];
 
 test("exact origins match", () => {
-  expect(matchOrigin(allowed, "https://exness.abhayymishraa.us")).toBe(true);
+  expect(matchOrigin(allowed, "https://orderloom.abhayymishraa.com")).toBe(true);
   expect(matchOrigin(allowed, "http://localhost:3000")).toBe(true);
 });
 
 test("wildcard matches one label", () => {
-  expect(matchOrigin(allowed, "https://exness-abc123.vercel.app")).toBe(true);
-  expect(matchOrigin(allowed, "https://exness-git-main-abhay.vercel.app")).toBe(true);
+  expect(matchOrigin(allowed, "https://orderloom-abc123.vercel.app")).toBe(true);
+  expect(matchOrigin(allowed, "https://orderloom-git-main-abhay.vercel.app")).toBe(true);
 });
 
 test("wildcard does not span dots", () => {
@@ -30,10 +30,10 @@ test("wildcard does not match the bare suffix", () => {
 test("attacker cannot smuggle the suffix via path or subdomain trickery", () => {
   expect(matchOrigin(allowed, "https://evil.com/.vercel.app")).toBe(false);
   expect(matchOrigin(allowed, "https://evilvercel.app")).toBe(false);
-  expect(matchOrigin(allowed, "http://exness-abc.vercel.app")).toBe(false); // wrong scheme
+  expect(matchOrigin(allowed, "http://orderloom-abc.vercel.app")).toBe(false); // wrong scheme
 });
 
 test("unrelated origins are rejected", () => {
   expect(matchOrigin(allowed, "https://evil.example")).toBe(false);
-  expect(matchOrigin(allowed, "https://exness.abhayymishraa.us.evil.com")).toBe(false);
+  expect(matchOrigin(allowed, "https://orderloom.abhayymishraa.com.evil.com")).toBe(false);
 });

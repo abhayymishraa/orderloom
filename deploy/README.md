@@ -3,16 +3,16 @@
 Frontend on Vercel. Everything else on one Oracle Ampere A1 box, no Docker.
 
 ```
-exness.abhayymishraa.us (Vercel)
+orderloom.abhayymishraa.com (Vercel)
         │ https
         ▼
- api.exness.abhayymishraa.us      ws.exness.abhayymishraa.us
+ api.orderloom.abhayymishraa.com      ws.orderloom.abhayymishraa.com
         │                                  │
         └────────────► Caddy :443 ◄────────┘
              TLS terminates here, certs auto-renew
-        ├── → 127.0.0.1:5000   exness-http    (systemd)
-        └── → 127.0.0.1:8080   exness-ws      (systemd)
-                               exness-poller  (systemd, no port)
+        ├── → 127.0.0.1:5000   orderloom-http    (systemd)
+        └── → 127.0.0.1:8080   orderloom-ws      (systemd)
+                               orderloom-poller  (systemd, no port)
                                   │
            shared PostgreSQL 17 + TimescaleDB, shared Redis
 ```
@@ -37,7 +37,7 @@ most of what the Docker daemon was doing.
 /etc/caddy/sites/<project>.caddy    auto-imported by the main Caddyfile
 ```
 
-Project #2 is: `newdb.sh proj2`, copy `apps/exness/` → `apps/proj2/`, change the
+Project #2 is: `newdb.sh proj2`, copy `apps/orderloom/` → `apps/proj2/`, change the
 ports, `systemctl enable --now`, `systemctl reload caddy`. Nothing else on the
 box is touched, and no service restarts but that project's own.
 
@@ -47,12 +47,12 @@ box is touched, and no service restarts but that project's own.
 ## First run
 
 1. `sudo bash deploy/bootstrap.sh` — installs the shared platform. Once per host.
-2. `sudo bash deploy/newdb.sh exness` — prints `DATABASE_URL`.
-3. Copy `apps/exness/exness.env.example` to `/etc/exness/exness.env`, fill it
+2. `sudo bash deploy/newdb.sh orderloom` — prints `DATABASE_URL`.
+3. Copy `apps/orderloom/orderloom.env.example` to `/etc/orderloom/orderloom.env`, fill it
    in, `chown root:ubuntu && chmod 640`.
-4. Copy the three `.service` files to `/etc/systemd/system/`, `exness.caddy` to
+4. Copy the three `.service` files to `/etc/systemd/system/`, `orderloom.caddy` to
    `/etc/caddy/sites/`, then
-   `systemctl daemon-reload && systemctl enable --now exness-http exness-ws exness-poller`
+   `systemctl daemon-reload && systemctl enable --now orderloom-http orderloom-ws orderloom-poller`
    and `systemctl reload caddy`.
 5. `HOST=<ip> bash deploy/deploy.sh` for every deploy after that.
 
@@ -69,7 +69,7 @@ Repo secrets required:
 ## Checks
 
 ```bash
-curl https://api.exness.abhayymishraa.us/api/v1/asset   # -> asset list
-websocat wss://ws.exness.abhayymishraa.us              # -> stream after SUBSCRIBE
-journalctl -u exness-poller -f                         # -> batches writing to timescale
+curl https://api.orderloom.abhayymishraa.com/api/v1/asset   # -> asset list
+websocat wss://ws.orderloom.abhayymishraa.com              # -> stream after SUBSCRIBE
+journalctl -u orderloom-poller -f                         # -> batches writing to timescale
 ```

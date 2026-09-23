@@ -1,5 +1,5 @@
 [Unit]
-Description=Run the exness backup nightly
+Description=Run the orderloom backup nightly
 
 [Timer]
 OnCalendar=daily

@@ -9,8 +9,8 @@ RUN bun install
 
 COPY . .
     
-ENV VITE_API_URL=https://backend.exness.elevenai.xyz/api/v1
-ENV VITE_WEBSOCKET_URL=wss://ws.exness.elevenai.xyz
+ENV VITE_API_URL=https://api.orderloom.abhayymishraa.com/api/v1
+ENV VITE_WEBSOCKET_URL=wss://ws.orderloom.abhayymishraa.com
 
 RUN bun run build
 

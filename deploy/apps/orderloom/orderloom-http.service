@@ -1,13 +1,13 @@
 [Unit]
-Description=exness http api
+Description=orderloom http api
 After=postgresql.service redis-server.service
 Requires=postgresql.service redis-server.service
 
 [Service]
 User=ubuntu
 Group=ubuntu
-WorkingDirectory=/srv/exness/http_server
-EnvironmentFile=/etc/exness/exness.env
+WorkingDirectory=/srv/orderloom/http_server
+EnvironmentFile=/etc/orderloom/orderloom.env
 Environment=PORT=5000
 ExecStart=/usr/local/bin/bun run src/index.ts
 
@@ -15,13 +15,13 @@ Restart=always
 RestartSec=3
 
 MemoryMax=1G
-SyslogIdentifier=exness-http
+SyslogIdentifier=orderloom-http
 
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/srv/exness/http_server
+ReadWritePaths=/srv/orderloom/http_server
 
 [Install]
 WantedBy=multi-user.target

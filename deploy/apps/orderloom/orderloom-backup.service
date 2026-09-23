@@ -1,0 +1,11 @@
+[Unit]
+Description=orderloom nightly database backup
+After=postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/srv/orderloom/deploy/backup.sh orderloom
+# Root: reads /etc/orderloom/orderloom.env and writes /var/backups.
+User=root
+SyslogIdentifier=orderloom-backup

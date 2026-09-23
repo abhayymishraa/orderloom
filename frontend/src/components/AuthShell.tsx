@@ -26,7 +26,7 @@ export default function AuthShell({
             <span className="grid h-6 w-6 place-items-center bg-accent text-[13px] font-bold text-[#04121f]">
               E
             </span>
-            <span className="text-[15px] font-semibold tracking-tight">Exness</span>
+            <span className="text-[15px] font-semibold tracking-tight">Orderloom</span>
           </Link>
         </header>
 

@@ -8,7 +8,7 @@
 # Installed by bootstrap.sh as a systemd timer. Run by hand any time.
 set -euo pipefail
 
-PROJECT="${1:-exness}"
+PROJECT="${1:-orderloom}"
 DEST="/var/backups/${PROJECT}"
 KEEP_DAYS=7
 STAMP=$(date -u +%Y%m%dT%H%M%SZ)

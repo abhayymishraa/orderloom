@@ -1,5 +1,5 @@
 [Unit]
-Description=exness binance price poller
+Description=orderloom binance price poller
 After=network-online.target postgresql.service redis-server.service
 Wants=network-online.target
 Requires=postgresql.service redis-server.service
@@ -7,8 +7,8 @@ Requires=postgresql.service redis-server.service
 [Service]
 User=ubuntu
 Group=ubuntu
-WorkingDirectory=/srv/exness/price_poller
-EnvironmentFile=/etc/exness/exness.env
+WorkingDirectory=/srv/orderloom/price_poller
+EnvironmentFile=/etc/orderloom/orderloom.env
 ExecStart=/usr/local/bin/bun run src/index.ts
 
 # Upstream Binance WS drops connections routinely; always come back.
@@ -16,13 +16,13 @@ Restart=always
 RestartSec=5
 
 MemoryMax=512M
-SyslogIdentifier=exness-poller
+SyslogIdentifier=orderloom-poller
 
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/srv/exness/price_poller
+ReadWritePaths=/srv/orderloom/price_poller
 
 [Install]
 WantedBy=multi-user.target

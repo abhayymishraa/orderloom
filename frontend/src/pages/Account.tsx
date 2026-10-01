@@ -45,25 +45,47 @@ function Key({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** Small-caps status pill. Accent dot + label, brutalist square corners. */
+function StatusBadge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="num inline-flex shrink-0 items-center gap-1.5 border border-line-strong bg-raised px-1.5 py-0.5 text-[9px] uppercase tracking-[0.14em] text-accent">
+      <span className="h-1.5 w-1.5 bg-accent" aria-hidden />
+      {children}
+    </span>
+  );
+}
+
 function Cell({
   label,
   children,
   tone,
+  badge,
+  updated,
 }: {
   label: string;
   children: React.ReactNode;
   tone?: "long" | "short";
+  badge?: string;
+  updated?: string;
 }) {
   return (
     <div className="tty-cross relative bg-surface px-4 py-4">
-      <Key>{label}</Key>
+      <div className="flex items-center justify-between gap-2">
+        <Key>{label}</Key>
+        {badge && <StatusBadge>{badge}</StatusBadge>}
+      </div>
       <dd
-        className={`num mt-2 text-[19px] font-medium ${
+        className={`num mt-2.5 text-[19px] font-medium ${
           tone === "long" ? "text-long" : tone === "short" ? "text-short" : "text-ink"
         }`}
       >
         {children}
       </dd>
+      {updated && (
+        <p className="num mt-2 text-[9px] uppercase tracking-[0.14em] text-ink-faint">
+          {updated}
+        </p>
+      )}
     </div>
   );
 }
@@ -215,6 +237,8 @@ export default function Account() {
           <Cell
             label="Realised P&L"
             tone={stats.realised === 0 ? undefined : stats.realised > 0 ? "long" : "short"}
+            badge="Live"
+            updated="Updated just now"
           >
             {closed.length ? signed(stats.realised) : "0.00"}
           </Cell>

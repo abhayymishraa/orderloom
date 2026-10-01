@@ -33,6 +33,34 @@ interface ClosedOrder extends OpenOrder {
 
 type OpenOrderWithPnl = OpenOrder & { pnlUsd: number };
 
+type RowStatus = "normal" | "warning" | "executed";
+
+const ROW_STATUS_LABEL: Record<RowStatus, string> = {
+  normal: "Active",
+  warning: "Near trigger",
+  executed: "Triggered",
+};
+
+const ROW_STATUS_CLASS: Record<RowStatus, string> = {
+  normal: "border-line-strong text-ink-faint",
+  warning: "border-yellow-500/40 text-yellow-500",
+  executed: "border-long/40 text-long",
+};
+
+/** Small uppercase pill, consistent with the app's `.label` type. */
+function StatusBadge({ status }: { status: RowStatus }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-[3px] border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em] ${ROW_STATUS_CLASS[status]}`}
+    >
+      {status === "warning" && (
+        <span className="h-1 w-1 rounded-full bg-yellow-500" />
+      )}
+      {ROW_STATUS_LABEL[status]}
+    </span>
+  );
+}
+
 export default function OrdersPanel() {
   const [activeTab, setActiveTab] = useState<"open" | "closed">("open");
   const [openOrders, setOpenOrders] = useState<OpenOrder[]>([]);
@@ -125,6 +153,16 @@ export default function OrdersPanel() {
     });
   }, [openOrders, latestPrices]);
 
+  // Compact summary for the header strip: what's committed and how it's doing,
+  // without having to scan every row.
+  const openSummary = useMemo(
+    () => ({
+      margin: openOrders.reduce((sum, o) => sum + o.margin, 0),
+      pnl: openWithPnl.reduce((sum, o) => sum + o.pnlUsd, 0),
+    }),
+    [openOrders, openWithPnl],
+  );
+
   // Helper function to get TP/SL status
   const getTpSlStatus = (order: OpenOrderWithPnl) => {
     const sym = (order.asset || "BTC").replace("USDT", "");
@@ -181,21 +219,36 @@ export default function OrdersPanel() {
 
   return (
     <div className="w-full h-full flex flex-col bg-surface text-ink">
+      {/* Header: what this panel is, and whether it's live. The tab bar below
+          used to carry both jobs and did neither one clearly. */}
+      <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
+        <h2 className="label">Positions</h2>
+        <span className="flex items-center gap-1.5 text-[10px] text-ink-faint">
+          <span className="h-1.5 w-1.5 rounded-full bg-long" />
+          live
+        </span>
+      </div>
+
       <div className="flex border-b border-line">
         <button
-          className={`flex-1 py-3 text-center text-sm font-medium transition ${
+          className={`flex-1 py-2.5 text-center text-[13px] font-medium transition-colors ${
             activeTab === "open"
-              ? "text-[#158BF9] border-b-2 border-[#158BF9]"
+              ? "text-accent shadow-[inset_0_-2px_0_0_var(--color-accent)]"
               : "text-ink-faint hover:text-ink-dim"
           }`}
           onClick={() => setActiveTab("open")}
         >
           Open Positions
+          {openOrders.length > 0 && (
+            <span className="num ml-1.5 text-[11px] text-ink-faint">
+              {openOrders.length}
+            </span>
+          )}
         </button>
         <button
-          className={`flex-1 py-3 text-center text-sm font-medium transition ${
+          className={`flex-1 py-2.5 text-center text-[13px] font-medium transition-colors ${
             activeTab === "closed"
-              ? "text-[#158BF9] border-b-2 border-[#158BF9]"
+              ? "text-accent shadow-[inset_0_-2px_0_0_var(--color-accent)]"
               : "text-ink-faint hover:text-ink-dim"
           }`}
           onClick={() => setActiveTab("closed")}
@@ -204,9 +257,37 @@ export default function OrdersPanel() {
         </button>
       </div>
 
+      {/* Compact metrics: committed margin and running P&L, without scanning
+          every row for it. Only meaningful while there's something open. */}
+      {activeTab === "open" && openOrders.length > 0 && (
+        <div className="num flex items-center gap-5 border-b border-line bg-raised/40 px-4 py-2 text-[11px]">
+          <span className="flex items-baseline gap-1.5">
+            <span className="text-ink-faint">Committed</span>
+            <span className="font-medium text-ink">${money(openSummary.margin)}</span>
+          </span>
+          <span className="flex items-baseline gap-1.5">
+            <span className="text-ink-faint">Unreal. P&amp;L</span>
+            <span
+              className={`font-medium ${openSummary.pnl >= 0 ? "text-long" : "text-short"}`}
+            >
+              {openSummary.pnl >= 0 ? "+" : ""}
+              ${money(openSummary.pnl)}
+            </span>
+          </span>
+        </div>
+      )}
+
       <div className="p-4 overflow-auto flex-1">
         {isLoading ? (
-          <div className="space-y-px p-3" aria-label="Loading positions">{[0,1,2].map((i) => (<div key={i} className="h-8 animate-pulse bg-raised" />))}</div>
+          <div className="space-y-2 p-1" aria-label="Loading positions">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-9 animate-pulse rounded-[3px] bg-raised"
+                style={{ animationDelay: `${i * 80}ms` }}
+              />
+            ))}
+          </div>
         ) : activeTab === "open" ? (
           <>
             {openWithPnl.length > 0 ? (
@@ -215,6 +296,7 @@ export default function OrdersPanel() {
                   <thead className="sticky top-0 z-10 bg-surface">
                     <tr className="label border-b border-line">
                       <th className="py-3 px-3 text-left font-medium">Symbol</th>
+                      <th className="py-3 px-3 text-left font-medium">Status</th>
                       <th className="py-3 px-3 text-right font-medium">Type</th>
                       <th className="py-3 px-3 text-right font-medium">Margin</th>
                       <th className="py-3 px-3 text-right font-medium">Leverage</th>
@@ -241,7 +323,7 @@ export default function OrdersPanel() {
                           order.liquidationPrice
                         : 1;
 
-                      let rowStatus = "normal";
+                      let rowStatus: RowStatus = "normal";
                       if (tpStatus === "hit" || slStatus === "hit") {
                         rowStatus = "executed";
                       } else if (
@@ -266,6 +348,9 @@ export default function OrdersPanel() {
                           <td className="py-3 px-3 font-medium text-ink">
                             {order.asset || "BTC"}
                             <span className="text-ink-faint text-xs">/USDT</span>
+                          </td>
+                          <td className="py-3 px-3">
+                            <StatusBadge status={rowStatus} />
                           </td>
                           <td
                             className={`py-3 px-3 text-right font-medium ${
@@ -389,15 +474,10 @@ export default function OrdersPanel() {
                             <button
                               onClick={() => closePosition(order.orderId)}
                               disabled={isClosingPosition === order.orderId}
-                              className={`px-3 py-2 text-ink rounded text-sm font-medium transition-colors
-                            ${
-                              isClosingPosition === order.orderId
-                                ? "bg-raised cursor-not-allowed"
-                                : "bg-[#EB483F] hover:bg-[#EB483F]/80"
-                            }`}
+                              className="btn border border-short/40 bg-short/10 px-3 py-1.5 text-[12px] text-short hover:border-short hover:bg-short hover:text-[#1a0605] disabled:hover:bg-short/10 disabled:hover:text-short"
                             >
                               {isClosingPosition === order.orderId
-                                ? "Closing..."
+                                ? "Closing…"
                                 : "Close"}
                             </button>
                           </td>
